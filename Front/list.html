@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Users</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 50px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4682b4;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .menu {
+            margin-bottom: 20px;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #4682b4;
+            padding: 10px;
+            border: 1px solid #4682b4;
+            border-radius: 5px;
+            margin: 0 10px;
+        }
+        .menu a:hover {
+            background-color: #4682b4;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="form.html">Form</a>
+        <a href="list.html">List</a>
+    </div>
+    <div class="container">
+        <h1>List of Users</h1>
+        <table id="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Hobbies</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data rows will be inserted here by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('http://localhost:3000/data');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                const tableBody = document.querySelector('#users-table tbody');
+                
+                // Clear existing rows
+                tableBody.innerHTML = '';
+
+                // Populate table with data
+                data.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.age}</td>
+                        <td>${user.hobbies}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Fetch data when the page loads
+        document.addEventListener('DOMContentLoaded', fetchData);
+    </script>
+</body>
+</html>

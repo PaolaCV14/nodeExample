@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capture Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .menu {
+            background-color: #4682b4;
+            padding: 10px;
+        }
+        .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .menu a:hover {
+            background-color: #4169e1;
+        }
+        .container {
+            padding: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4682b4;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4169e1;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Main Page</a>
+        <a href="form.html">Capture Data</a>
+        <a href="list.html">List Data</a>
+    </div>
+
+    <div class="container">
+        <h1>Capture Data</h1>
+        <form id="data-form">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="number" id="age" placeholder="Age" required>
+            <input type="text" id="hobbies" placeholder="Hobbies (comma-separated)" required>
+            <button type="submit">Submit</button>
+        </form>
+        <p id="response-message"></p>
+    </div>
+
+    <script>
+        document.getElementById('data-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Gather form data
+            const name = document.getElementById('name').value;
+            const age = parseInt(document.getElementById('age').value, 10);
+            const hobbies = document.getElementById('hobbies').value.split(',').map(hobby => hobby.trim());
+
+            // Create JSON object
+            const data = {
+                Name: name,
+                Age: age,
+                Hobbies: hobbies
+            };
+
+            // Send POST request
+            fetch('http://localhost:3000/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Show success message
+                document.getElementById('response-message').textContent = result.message;
+            })
+            .catch(error => {
+                // Show error message
+                document.getElementById('response-message').textContent = 'Error submitting data.';
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
